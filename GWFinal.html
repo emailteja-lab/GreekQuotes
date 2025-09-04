@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Greek Wisdom - Timed Quotes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      font-family: Georgia, serif;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transition: background-image 1s ease-in-out;
+    }
+    .overlay {
+      background: rgba(0,0,0,0.55);
+      padding: 20px 30px;
+      border-radius: 15px;
+      max-width: 650px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    }
+    h1 {
+      font-size: 1.6em;
+      margin-bottom: 15px;
+      color: #ffde59;
+    }
+    p {
+      font-size: 1em;
+      margin-top: 10px;
+      font-style: italic;
+    }
+    .note {
+      margin-top: 15px;
+      font-size: 0.9em;
+      font-style: normal;
+      color: #ffd1dc;
+    }
+    .countdown {
+      margin-top: 8px;
+      font-size: 0.9em;
+      color: #c0ffb3;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <h1 id="quote">Loading...</h1>
+    <p id="author"></p>
+    <p class="note">✨ See one new quote every 5 minutes ✨</p>
+    <p id="countdown" class="countdown"></p>
+  </div>
+
+  <script>
+    const quotes = [
+      { text: "The unexamined life is not worth living.", author: "Socrates" },
+      { text: "Happiness depends upon ourselves.", author: "Aristotle" },
+      { text: "Man is the measure of all things.", author: "Protagoras" },
+      { text: "No man ever steps in the same river twice.", author: "Heraclitus" },
+      { text: "He has the most who is most content with the least.", author: "Diogenes" },
+      { text: "Time is the most valuable thing a man can spend.", author: "Theophrastus" },
+      { text: "Wealth consists not in having great possessions, but in having few wants.", author: "Epictetus" },
+      { text: "Luck is what happens when preparation meets opportunity.", author: "Seneca" },
+      { text: "Courage is knowing what not to fear.", author: "Plato" },
+      { text: "Waste no more time arguing what a good man should be. Be one.", author: "Marcus Aurelius" },
+      { text: "Know thyself.", author: "Socrates" },
+      { text: "Pleasure in the job puts perfection in the work.", author: "Aristotle" },
+      { text: "Be kind, for everyone you meet is fighting a harder battle.", author: "Plato" },
+      { text: "It is the mark of an educated mind to be able to entertain a thought without accepting it.", author: "Aristotle" },
+      { text: "The only true wisdom is in knowing you know nothing.", author: "Socrates" },
+      { text: "First say to yourself what you would be; and then do what you have to do.", author: "Epictetus" },
+      { text: "To love only what happens, what was destined. No greater harmony.", author: "Marcus Aurelius" },
+      { text: "Life is short, the art long.", author: "Hippocrates" },
+      { text: "Better to be unborn than untaught, for ignorance is the root of misfortune.", author: "Plato" },
+      { text: "Education is the kindling of a flame, not the filling of a vessel.", author: "Socrates" },
+      { text: "Good habits formed at youth make all the difference.", author: "Aristotle" },
+      { text: "There is nothing permanent except change.", author: "Heraclitus" },
+      { text: "The way to gain a good reputation is to endeavor to be what you desire to appear.", author: "Socrates" },
+      { text: "No great mind has ever existed without a touch of madness.", author: "Aristotle" },
+      { text: "The soul becomes dyed with the color of its thoughts.", author: "Marcus Aurelius" },
+      { text: "If you want to be a writer, write.", author: "Epictetus" },
+      { text: "Let him who would move the world first move himself.", author: "Socrates" },
+      { text: "Character is destiny.", author: "Heraclitus" },
+      { text: "Do not spoil what you have by desiring what you have not.", author: "Epicurus" },
+      { text: "Death is nothing to us, since when we are, death has not come, and when death has come, we are not.", author: "Epicurus" },
+      { text: "The best revenge is not to be like your enemy.", author: "Marcus Aurelius" },
+      { text: "We suffer more often in imagination than in reality.", author: "Seneca" },
+      { text: "Difficulties strengthen the mind, as labor does the body.", author: "Seneca" },
+      { text: "True happiness is to enjoy the present, without anxious dependence upon the future.", author: "Seneca" },
+      { text: "What we achieve inwardly will change outer reality.", author: "Plutarch" },
+      { text: "Nothing is enough for the man to whom enough is too little.", author: "Epicurus" },
+      { text: "A room without books is like a body without a soul.", author: "Cicero" },
+      { text: "The mind is not a vessel to be filled but a fire to be kindled.", author: "Plutarch" },
+      { text: "Fortune favors the bold.", author: "Terence (influenced by Greek thought)" },
+      { text: "He who has a why to live can bear almost any how.", author: "Nietzsche (Stoic-inspired)" },
+      { text: "The greatest wealth is to live content with little.", author: "Plato" },
+      { text: "Be yourself; everyone else is already taken.", author: "Oscar Wilde (echoing Socratic idea)" },
+      { text: "Nothing in excess.", author: "Delphic Maxim" },
+      { text: "Silence is better than unmeaning words.", author: "Pythagoras" },
+      { text: "Well begun is half done.", author: "Aristotle" },
+      { text: "Numbers rule the universe.", author: "Pythagoras" },
+      { text: "Friendship is a single soul dwelling in two bodies.", author: "Aristotle" },
+      { text: "The beginning is the most important part of the work.", author: "Plato" },
+      { text: "He who is not a good servant will not be a good master.", author: "Plato" },
+      { text: "Nothing exists except atoms and empty space.", author: "Democritus" },
+      { text: "Throw your dreams into space like a kite.", author: "Plato (attributed)" },
+      { text: "Injustice anywhere is a threat to justice everywhere.", author: "Greek Stoic idea" },
+      { text: "Fate leads the willing, and drags along the reluctant.", author: "Seneca" },
+      { text: "The energy of the mind is the essence of life.", author: "Aristotle" },
+      { text: "All men by nature desire knowledge.", author: "Aristotle" },
+      { text: "Hope is the dream of a waking man.", author: "Aristotle" },
+      { text: "Wisdom begins in wonder.", author: "Socrates" },
+      { text: "Those who know, do. Those that understand, teach.", author: "Aristotle" },
+      { text: "You will never do anything in this world without courage.", author: "Aristotle" },
+      { text: "He who is not courageous enough to take risks will accomplish nothing in life.", author: "Aristotle" },
+      { text: "It is not what we profess but what we practice that gives us integrity.", author: "Stoic teaching" },
+      { text: "The greater the difficulty, the more glory in surmounting it.", author: "Epicurus" },
+      { text: "Contentment is natural wealth, luxury is artificial poverty.", author: "Socrates" },
+      { text: "Liberty means responsibility. That is why most men dread it.", author: "Greek maxim" },
+      { text: "No man has a good enough memory to be a successful liar.", author: "Plato (attributed)" },
+      { text: "Self-conquest is the greatest of victories.", author: "Plato" },
+      { text: "Philosophy begins in wonder.", author: "Plato" },
+      { text: "The secret of happiness is freedom, the secret of freedom is courage.", author: "Thucydides" },
+      { text: "An honest man is always a child.", author: "Socrates" },
+      { text: "Learning is not child’s play; we cannot learn without pain.", author: "Aristotle" },
+      { text: "A fool is known by his speech; and a wise man by silence.", author: "Pythagoras" },
+      { text: "Reason is immortal, all else mortal.", author: "Pythagoras" },
+      { text: "Above all else, respect yourself.", author: "Pythagoras" },
+      { text: "Educate the children and it won’t be necessary to punish the men.", author: "Pythagoras" },
+      { text: "Rest is the sweet sauce of labor.", author: "Plutarch" },
+      { text: "Do not seek for everything to happen as you wish it, but rather wish that everything happens as it actually will.", author: "Epictetus" },
+      { text: "Control thy passions lest they take vengeance on thee.", author: "Epictetus" },
+      { text: "Freedom is nothing else but a chance to be better.", author: "Epictetus" },
+      { text: "Men are disturbed not by things, but by the view which they take of them.", author: "Epictetus" },
+      { text: "Wealth consists not in having great possessions, but in having few wants.", author: "Epictetus" },
+      { text: "If you want to improve, be content to be thought foolish and stupid.", author: "Epictetus" },
+      { text: "Circumstances don’t make the man, they only reveal him to himself.", author: "Epictetus" },
+      { text: "Don’t explain your philosophy. Embody it.", author: "Epictetus" },
+      { text: "First learn the meaning of what you say, and then speak.", author: "Epictetus" },
+      { text: "No man is free who is not master of himself.", author: "Epictetus" },
+      { text: "Life is like a play: it’s not the length, but the excellence of the acting that matters.", author: "Seneca" },
+      { text: "Sometimes even to live is an act of courage.", author: "Seneca" },
+      { text: "As long as you live, keep learning how to live.", author: "Seneca" },
+      { text: "Begin at once to live, and count each separate day as a separate life.", author: "Seneca" },
+      { text: "It is not the man who has too little, but the man who craves more, that is poor.", author: "Seneca" },
+      { text: "Associate with people who are likely to improve you.", author: "Seneca" },
+      { text: "Only time can heal what reason cannot.", author: "Seneca" },
+      { text: "We are always complaining that our days are few, and acting as though there would be no end of them.", author: "Seneca" }
+    ];
+
+    const backgrounds = [
+      "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1600&q=80"
+    ];
+
+    let currentIndex = 0;
+    const interval = 5 * 60 * 1000; // 5 minutes
+
+    function showQuote() {
+      const quote = quotes[currentIndex % quotes.length];
+      const bg = backgrounds[currentIndex % backgrounds.length];
+      document.getElementById("quote").textContent = quote.text;
+      document.getElementById("author").textContent = "— " + quote.author;
+      document.body.style.backgroundImage = `url(${bg})`;
+      currentIndex++;
+      nextChange = Date.now() + interval;
+    }
+
+    let nextChange = Date.now() + interval;
+
+    function updateCountdown() {
+      const diff = nextChange - Date.now();
+      if (diff <= 0) {
+        showQuote();
+        return;
+      }
+      const minutes = String(Math.floor(diff / (1000*60))).padStart(2,"0");
+      const seconds = String(Math.floor((diff % (1000*60)) / 1000)).padStart(2,"0");
+      document.getElementById("countdown").textContent = `Next quote in ${minutes}:${seconds}`;
+    }
+
+    // Initial load
+    showQuote();
+    setInterval(updateCountdown, 1000);
+    setInterval(showQuote, interval);
+  </script>
+</body>
+</html>
