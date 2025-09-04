@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Daily Greek Wisdom</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      font-family: Georgia, serif;
+      background-size: cover;
+      background-position: center;
+      transition: background-image 1s ease-in-out;
+    }
+    .overlay {
+      background: rgba(0,0,0,0.5);
+      padding: 20px 30px;
+      border-radius: 12px;
+      max-width: 700px;
+    }
+    h1 {
+      font-size: 1.5em;
+      margin-bottom: 15px;
+    }
+    p {
+      font-size: 1em;
+      margin-top: 10px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <h1 id="quote">Loading...</h1>
+    <p id="author"></p>
+  </div>
+
+  <script>
+    const quotes = [
+      { text: "The unexamined life is not worth living.", author: "Socrates" },
+      { text: "Happiness depends upon ourselves.", author: "Aristotle" },
+      { text: "Man is the measure of all things.", author: "Protagoras" },
+      { text: "No man ever steps in the same river twice.", author: "Heraclitus" },
+      { text: "He has the most who is most content with the least.", author: "Diogenes" },
+      { text: "Wealth consists not in having great possessions, but in having few wants.", author: "Epictetus" },
+      { text: "You could leave life right now. Let that determine what you do and say and think.", author: "Marcus Aurelius" },
+      { text: "Knowing yourself is the beginning of all wisdom.", author: "Aristotle" },
+      { text: "Time is the moving image of eternity.", author: "Plato" },
+      { text: "Courage is knowing what not to fear.", author: "Plato" },
+      { text: "Silence is a source of great strength.", author: "Heraclitus" },
+      { text: "Do not spoil what you have by desiring what you have not.", author: "Epicurus" },
+      { text: "The greater the difficulty, the more glory in surmounting it.", author: "Epicurus" },
+      { text: "Education is the kindling of a flame, not the filling of a vessel.", author: "Socrates" },
+      { text: "We are what we repeatedly do. Excellence, then, is not an act, but a habit.", author: "Aristotle" },
+      { text: "To enjoy the things we ought and to hate the things we ought has the greatest bearing on excellence of character.", author: "Aristotle" },
+      { text: "Difficulties are things that show a person what they are.", author: "Epictetus" },
+      { text: "Waste no more time arguing about what a good man should be. Be one.", author: "Marcus Aurelius" },
+      { text: "Be kind, for everyone you meet is fighting a hard battle.", author: "Plato" },
+      { text: "I cannot teach anybody anything. I can only make them think.", author: "Socrates" },
+      { text: "It is not length of life, but depth of life.", author: "Aristotle" },
+      { text: "A room without books is like a body without a soul.", author: "Cicero" },
+      { text: "He who opens a school door, closes a prison.", author: "Victor Hugo (inspired by Socratic thought)" },
+      { text: "True happiness is to enjoy the present, without anxious dependence upon the future.", author: "Seneca" },
+      { text: "The soul becomes dyed with the color of its thoughts.", author: "Marcus Aurelius" },
+      { text: "It is the mark of an educated mind to be able to entertain a thought without accepting it.", author: "Aristotle" },
+      { text: "The way to gain a good reputation is to endeavor to be what you desire to appear.", author: "Socrates" },
+      { text: "Be yourself; everyone else is already taken.", author: "Often attributed to Socrates" },
+      { text: "Luck is what happens when preparation meets opportunity.", author: "Seneca" },
+      { text: "Death smiles at us all, but all a man can do is smile back.", author: "Marcus Aurelius" },
+      { text: "Choose to be optimistic, it feels better.", author: "Epicurus" },
+      { text: "The mind is everything; what you think you become.", author: "Buddha (often cited in Stoic discussions)" },
+      { text: "Contentment is natural wealth, luxury is artificial poverty.", author: "Socrates" },
+      { text: "The good man is the friend of all living things.", author: "Aristotle" },
+      { text: "No man has a good chance against the many.", author: "Homer" },
+      { text: "Wealth is the slave of the wise and the master of the fool.", author: "Seneca" },
+      { text: "He who laughs at himself never runs out of things to laugh at.", author: "Epictetus" },
+      { text: "Even while they teach, men learn.", author: "Seneca" },
+      { text: "Self-control is the chief element in self-respect, and self-respect is the chief element in courage.", author: "Thucydides" },
+      { text: "The best revenge is to be unlike your enemy.", author: "Marcus Aurelius" },
+      { text: "We should live according to nature.", author: "Zeno of Citium" },
+      { text: "Freedom is the only worthy goal in life. It is won by disregarding things that lie beyond our control.", author: "Epictetus" },
+      { text: "Don't explain your philosophy. Embody it.", author: "Epictetus" },
+      { text: "Nature does nothing uselessly.", author: "Aristotle" },
+      { text: "Happiness is a state of activity.", author: "Aristotle" },
+      { text: "Do not seek to have events happen as you want them but instead want them to happen as they do and your life will go well.", author: "Epictetus" },
+      { text: "The key is to keep company only with people who uplift you.", author: "Epictetus" },
+      { text: "Nothing endures but change.", author: "Heraclitus" },
+      { text: "Life must be understood backward. But it must be lived forward.", author: "Soren Kierkegaard (inspired by Heraclitus)" },
+      { text: "From the deepest desires often come the deadliest hate.", author: "Socrates" },
+      { text: "Let him that would move the world first move himself.", author: "Socrates" },
+      { text: "Do not waste time on what you cannot change.", author: "Marcus Aurelius" },
+      { text: "Good character is not formed in a week or a month. It is created little by little, day by day.", author: "Heraclitus" },
+      { text: "There is nothing permanent except change.", author: "Heraclitus" },
+      { text: "Everything existing in the universe is the fruit of chance and necessity.", author: "Democritus" },
+      { text: "Small opportunities are often the beginning of great enterprises.", author: "Demosthenes" },
+      { text: "Character is destiny.", author: "Heraclitus" },
+      { text: "Numbers rule the universe.", author: "Pythagoras" },
+      { text: "Rest satisfied with doing well, and leave others to talk of you as they please.", author: "Pythagoras" },
+      { text: "Wisdom begins in wonder.", author: "Socrates" },
+      { text: "The only true wisdom is in knowing you know nothing.", author: "Socrates" },
+      { text: "Education is the best provision for old age.", author: "Aristotle" },
+      { text: "Friendship is a single soul dwelling in two bodies.", author: "Aristotle" },
+      { text: "All men by nature desire to know.", author: "Aristotle" },
+      { text: "The roots of education are bitter, but the fruit is sweet.", author: "Aristotle" },
+      { text: "Pleasure in the job puts perfection in the work.", author: "Aristotle" },
+      { text: "Poverty is the parent of revolution and crime.", author: "Aristotle" },
+      { text: "It is not what we say, but what we do, that defines us.", author: "Socrates" },
+      { text: "To live is to suffer, to survive is to find some meaning in the suffering.", author: "Nietzsche (inspired by Stoicism)" },
+      { text: "He who is not contented with what he has would not be contented with what he would like to have.", author: "Socrates" },
+      { text: "A fool is known by his speech; and a wise man by silence.", author: "Pythagoras" },
+      { text: "The beginning is the most important part of the work.", author: "Plato" },
+      { text: "Opinion is the medium between knowledge and ignorance.", author: "Plato" },
+      { text: "The greatest wealth is to live content with little.", author: "Plato" },
+      { text: "Music gives a soul to the universe, wings to the mind, flight to the imagination and life to everything.", author: "Plato" },
+      { text: "Love is a serious mental disease.", author: "Plato" },
+      { text: "Wise men speak because they have something to say; fools because they have to say something.", author: "Plato" },
+      { text: "Ignorance, the root and stem of all evil.", author: "Plato" },
+      { text: "Courage is resistance to fear, mastery of fear, not absence of fear.", author: "Aristotle" },
+      { text: "To fear death, my friends, is only to think ourselves wise without being wise.", author: "Socrates" },
+      { text: "False words are not only evil in themselves, but they infect the soul with evil.", author: "Socrates" },
+      { text: "Better to be unborn than untaught, for ignorance is the root of misfortune.", author: "Plato" },
+      { text: "The price good men pay for indifference to public affairs is to be ruled by evil men.", author: "Plato" },
+      { text: "Necessity is the mother of invention.", author: "Plato" },
+      { text: "Do not say a little in many words but a great deal in a few.", author: "Pythagoras" },
+      { text: "Reason is immortal, all else mortal.", author: "Pythagoras" },
+      { text: "The oldest, shortest words— ‘yes’ and ‘no’— are those which require the most thought.", author: "Pythagoras" },
+      { text: "Injustice anywhere is a threat to justice everywhere.", author: "Plato" },
+      { text: "All is flux, nothing stays still.", author: "Heraclitus" },
+      { text: "War is the father of all and king of all.", author: "Heraclitus" },
+      { text: "History is philosophy teaching by examples.", author: "Thucydides" },
+      { text: "The strong do what they can and the weak suffer what they must.", author: "Thucydides" }
+    ];
+
+    const backgrounds = [
+      "https://source.unsplash.com/1600x900/?nature,forest",
+      "https://source.unsplash.com/1600x900/?mountains,sunset",
+      "https://source.unsplash.com/1600x900/?sea,sky",
+      "https://source.unsplash.com/1600x900/?river,trees",
+      "https://source.unsplash.com/1600x900/?sunrise,landscape",
+      "https://source.unsplash.com/1600x900/?stars,night",
+      "https://source.unsplash.com/1600x900/?waterfall"
+    ];
+
+    function getDailyIndex(listLength) {
+      const today = new Date();
+      const daySeed = today.getFullYear()*1000 + today.getMonth()*100 + today.getDate();
+      return daySeed % listLength;
+    }
+
+    function showDailyQuote() {
+      const qIndex = getDailyIndex(quotes.length);
+      const bIndex = getDailyIndex(backgrounds.length);
+
+      const quote = quotes[qIndex];
+      document.getElementById("quote").textContent = quote.text;
+      document.getElementById("author").textContent = "— " + quote.author;
+      document.body.style.backgroundImage = `url(${backgrounds[bIndex]})`;
+    }
+
+    showDailyQuote();
+
+    // Auto refresh at midnight
+    function scheduleMidnightRefresh() {
+      const now = new Date();
+      const tomorrow = new Date();
+      tomorrow.setHours(24,0,0,0);
+      const msToMidnight = tomorrow - now;
+      setTimeout(() => {
+        showDailyQuote();
+        scheduleMidnightRefresh();
+      }, msToMidnight);
+    }
+    scheduleMidnightRefresh();
+  </script>
+</body>
+</html>
