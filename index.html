@@ -54,7 +54,7 @@
   <div class="overlay">
     <h1 id="quote">Loading...</h1>
     <p id="author"></p>
-    <p class="note">✨ See one new quote every 5 minutes ✨</p>
+    <p class="note">✨ See one new quote every 10 seconds ✨</p>
     <p id="countdown" class="countdown"></p>
   </div>
 
@@ -164,7 +164,7 @@
     ];
 
     let currentIndex = 0;
-    const interval = 5 * 60 * 1000; // 5 minutes
+    const interval = 1 * 10 * 1000; // 5 minutes
 
     function showQuote() {
       const quote = quotes[currentIndex % quotes.length];
