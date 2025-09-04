@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Daily Greek Wisdom</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      font-family: Georgia, serif;
+      background-size: cover;
+      background-position: center;
+      transition: background-image 1s ease-in-out;
+    }
+    .overlay {
+      background: rgba(0,0,0,0.55);
+      padding: 20px 30px;
+      border-radius: 15px;
+      max-width: 650px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    }
+    h1 {
+      font-size: 1.6em;
+      margin-bottom: 15px;
+      color: #ffde59; /* golden highlight */
+    }
+    p {
+      font-size: 1em;
+      margin-top: 10px;
+      font-style: italic;
+    }
+    .note {
+      margin-top: 15px;
+      font-size: 0.9em;
+      font-style: normal;
+      color: #ffd1dc; /* pastel pink */
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <h1 id="quote">Loading...</h1>
+    <p id="author"></p>
+    <p class="note">✨ See one quote every day ✨</p>
+  </div>
+
+  <script>
+    const quotes = [
+      { text: "The unexamined life is not worth living.", author: "Socrates" },
+      { text: "Happiness depends upon ourselves.", author: "Aristotle" },
+      { text: "Man is the measure of all things.", author: "Protagoras" },
+      { text: "No man ever steps in the same river twice.", author: "Heraclitus" },
+      { text: "He has the most who is most content with the least.", author: "Diogenes" },
+      { text: "Time is the most valuable thing a man can spend.", author: "Theophrastus" },
+      { text: "Wealth consists not in having great possessions, but in having few wants.", author: "Epictetus" },
+      { text: "Luck is what happens when preparation meets opportunity.", author: "Seneca" },
+      { text: "Courage is knowing what not to fear.", author: "Plato" },
+      { text: "Waste no more time arguing what a good man should be. Be one.", author: "Marcus Aurelius" }
+      // 👉 extend this list up to 100 quotes
+    ];
+
+    const backgrounds = [
+      "https://source.unsplash.com/1600x900/?nature,forest,colorful",
+      "https://source.unsplash.com/1600x900/?mountains,sunset,color",
+      "https://source.unsplash.com/1600x900/?sea,sky,vivid",
+      "https://source.unsplash.com/1600x900/?river,trees,bright",
+      "https://source.unsplash.com/1600x900/?sunrise,landscape,colorful",
+      "https://source.unsplash.com/1600x900/?stars,night,color",
+      "https://source.unsplash.com/1600x900/?waterfall,rainbow"
+    ];
+
+    function getDailyIndex(listLength) {
+      const today = new Date();
+      const daySeed = today.getFullYear()*1000 + today.getMonth()*100 + today.getDate();
+      return daySeed % listLength;
+    }
+
+    function showDailyQuote() {
+      const qIndex = getDailyIndex(quotes.length);
+      const bIndex = getDailyIndex(backgrounds.length);
+
+      const quote = quotes[qIndex];
+      document.getElementById("quote").textContent = quote.text;
+      document.getElementById("author").textContent = "— " + quote.author;
+      document.body.style.backgroundImage = `url(${backgrounds[bIndex]})`;
+    }
+
+    showDailyQuote();
+
+    // Auto refresh at midnight
+    function scheduleMidnightRefresh() {
+      const now = new Date();
+      const tomorrow = new Date();
+      tomorrow.setHours(24,0,0,0);
+      const msToMidnight = tomorrow - now;
+      setTimeout(() => {
+        showDailyQuote();
+        scheduleMidnightRefresh();
+      }, msToMidnight);
+    }
+    scheduleMidnightRefresh();
+  </script>
+</body>
+</html>
